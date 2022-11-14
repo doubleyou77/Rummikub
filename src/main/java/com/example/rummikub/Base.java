@@ -1,4 +1,4 @@
-package com.example.rummikub2;
+package com.example.rummikub;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -113,7 +113,7 @@ public class Base {
                         curBoard.boardPrint();
                         System.out.println((whoPlayer==1)?"플레이어 1 - 카드":"플레이어 2 - 카드");
                         curBoard.CheckCards((whoPlayer==1)?playerCards : playerCards2,false);
-                        System.out.println("정렬한 카드");
+                        System.out.println("카드 정렬");
                         curBoard.printSortedCards((whoPlayer==1)?playerCards : playerCards2);
                         System.out.println("1 - 새로놓기, 2 - 기존패에 넣기, 3 - 카드받기 , 4 - 특정 카드 되돌리기 , 5 - 특정 카드 옮기기 , 6 - 턴 종료");
                         Scanner sc=new Scanner(System.in);
@@ -267,38 +267,38 @@ public class Base {
                             System.out.println();
                             System.out.println("카드를 선택하세요");
 
-//                            ArrayList<Card> slicedSortedCards = new ArrayList<Card>();
-//
-//                            ArrayList<Card> sortedCards = curBoard.sortCardsToNumber(nowPlayer);
-//                            boolean[] color = {false, false, false, false, false};
-//
-//                            for(int i = 1; i <= 13; i++) {
-//                                for(int j = 0; j < sortedCards.size(); j++) {
-//                                    if(sortedCards.get(j).cardNumber==i && !color[sortedCards.get(j).sort]) {
-//                                        slicedSortedCards.add(new Card(sortedCards.get(j).sort, sortedCards.get(j).cardNumber));
-//                                        color[sortedCards.get(j).sort] = true;
-//                                        nowPlayer.remove(j);
-//                                    }
-//                                }
-//
-//                                System.out.println();
-//                                for(int j = 0; j < slicedSortedCards.size(); j++) {
-//                                    System.out.print(slicedSortedCards.get(j).cardText+" ");
-//                                }
-////                                System.out.println(cardCheckColor(slicedSortedCards));
-////
-////                                for(int k = 0; k < color.length; k++)
-////                                    System.out.print(color[k]+" ");
-//                                System.out.println();
-//                                if(!cardCheckColor(slicedSortedCards)) {
-//                                    for(int j = 0; j < slicedSortedCards.size(); j++)
-//                                        nowPlayer.add(new Card(slicedSortedCards.get(j).sort, slicedSortedCards.get(j).cardNumber));
-//                                }
-//
-//                                slicedSortedCards.clear();
-//                                color = new boolean[]{false, false, false, false, false};
+                            ArrayList<Card> slicedSortedCards = new ArrayList<Card>();
+                            ArrayList<Card> unslicedSortedCards = new ArrayList<Card>();
 
-//                         }
+                            ArrayList<Card> sortedCards = curBoard.sortCardsToNumber(nowPlayer);
+                            boolean[] color = {false, false, false, false, false};
+
+                            for(int i = 1; i <= 13; i++) {
+                                for(int j = 0; j < sortedCards.size(); j++) {
+                                    if(sortedCards.get(j).cardNumber==i && !color[sortedCards.get(j).sort]) {
+                                        slicedSortedCards.add(new Card(sortedCards.get(j).sort, sortedCards.get(j).cardNumber));
+                                        color[sortedCards.get(j).sort] = true;
+                                    }
+                                    else {
+                                        unslicedSortedCards.add(new Card(sortedCards.get(j).sort, sortedCards.get(j).cardNumber));
+                                    }
+                                }
+
+
+                                if(cardCheckColor(slicedSortedCards)) {
+                                    // 수정
+                                    cardNewAI(slicedSortedCards);
+                                    for(int j = 1; j < slicedSortedCards.size(); j++) {
+                                        cardInAI(slicedSortedCards.get(j));
+                                    }
+                                    nowPlayer = new ArrayList<Card>(unslicedSortedCards);
+
+                                }
+                                slicedSortedCards.clear();
+                                unslicedSortedCards.clear();
+                                color = new boolean[]{false, false, false, false, false};
+//
+                         }
 
                             curBoard.sortCardsToColor(nowPlayer);
                             curBoard.CheckCards(nowPlayer,true);
@@ -435,10 +435,11 @@ public class Base {
         }
     }
 
-    static void cardNewAI(int whoPlayer) { //카드 새로넣기 - AI
+    static void cardNewAI(ArrayList<Card> card) { //카드 새로넣기 - AI
         curBoard.boardCards.add(new ArrayList<Card>());
-//        curBoard.addBoardCard((whoPlayer==1)?playerCards.get(0));
+        curBoard.addBoardCard(card.get(0), curBoard.boardCards.size()-1);
     }
+
 
     static void cardIn(int whoPlayer) {//카드 기존꺼에 넣기
         int select=cardSelect((whoPlayer==1)?playerCards.size():playerCards2.size());//카드 선택
@@ -467,7 +468,8 @@ public class Base {
                 if( !(input<=0 || input>curBoard.boardCards.get(selection-1).size()) ) {
                     selection2=input;
                     break;
-                }else {
+                }
+                else {
                     continue;
                 }
             }
@@ -511,6 +513,32 @@ public class Base {
             }
         }
     }
+
+    static void cardInAI(Card card) {//카드 기존꺼에 넣기
+        int toGroup = curBoard.boardCards.size()-1;
+        int toIndex = curBoard.boardCards.get(toGroup).size()-1;
+        curBoard.addBoardCard2(card, toGroup, toIndex);
+
+//        if(nowPlayer==1) {
+//            for(int i=0;i<curBoard.boardCards.get(selection-1).size();i++) {
+//                if(curBoard.boardCards.get(selection-1).get(i).byPlayer==false) {
+//                    System.out.println("처음엔 다른 카드와 조합불가능");
+//                    return;
+//                }
+//            }
+        }
+
+        //public void addBoardCard(Card card,int index) {//새로넣기 할때 카드 넣는거임
+        //        boardCards.get(index).add(card);
+        //    }
+        //
+        //    public void addBoardCard2(Card card,int index,int index2) {//지정해서 카드 넣는거임
+        //        boardCards.get(index).add(index2, card);
+        //    }
+
+//    curBoard.addBoardCard2((whoPlayer==1)?playerCards.get(select-1) :
+//            playerCards2.get(select-1), selection-1, selection2);
+
 
     static void cardReturn(int whoPlayer) {//특정카드 되돌리기
         Scanner sc=new Scanner(System.in);
