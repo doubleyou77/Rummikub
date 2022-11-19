@@ -276,7 +276,7 @@ public class Base {
                             ArrayList<Card> slicedSortedCards = new ArrayList<Card>();
                             ArrayList<Integer> slicedCardsIndex = new ArrayList<>();
 
-                            boolean[] color = {false, false, false, false, false};
+                            boolean[] color = new boolean[5];
 
                             for(int i = 1; i <= 13; i++) {
                                 for(int j = 0; j < nowPlayer.size(); j++) {
@@ -287,19 +287,18 @@ public class Base {
                                     }
                                 }
 
-//                                if(cardCheckColor(slicedSortedCards)) {
-//                                    cardNew(whoPlayer, slicedCardsIndex.get(0)+1);
-//
-//                                    for(int j = 1; j < slicedCardsIndex.size(); j++)
-//                                        cardInAI(whoPlayer, slicedCardsIndex.get(j)-j+1);
-//                                }
+                                if(cardCheckColor(slicedSortedCards)) {
+                                    cardNew(whoPlayer, slicedCardsIndex.get(0)+1);
+
+                                    for(int j = 1; j < slicedCardsIndex.size(); j++)
+                                        cardInAI(whoPlayer, slicedCardsIndex.get(j)-j+1);
+                                }
 
                                 slicedSortedCards.clear();
-                                slicedCardsIndex = new ArrayList<>();
-                                color = new boolean[]{false, false, false, false, false};
+                                slicedCardsIndex.clear();
+                                color = new boolean[5];
                             }
 
-                            curBoard.CheckCards((whoPlayer==1)?playerCards:playerCards2,true);
 
                             if(whoPlayer==1) {
                                 playerCards = curBoard.sortCardsToColor(playerCards);
@@ -308,70 +307,40 @@ public class Base {
                             }
                             nowPlayer = (whoPlayer==1)?playerCards:playerCards2;
 
-                            ArrayList<Card> slicedCardsToCheckCount = new ArrayList<Card>();
                             boolean[] number = new boolean[15];
 
                             for(int i = 0; i <= 5; i++) { //수정
                                 for(int j = 0; j < nowPlayer.size(); j++) {
                                     if(nowPlayer.get(j).sort==i && !number[nowPlayer.get(j).cardNumber]) {
+                                        if(slicedSortedCards.size()!=0) {
+                                            if(nowPlayer.get(j).cardNumber-1!=slicedSortedCards.get(slicedSortedCards.size()-1).cardNumber) {
+                                                slicedSortedCards.clear();
+                                                slicedCardsIndex.clear();
+                                                number = new boolean[15];
+                                            }
+                                        }
                                         slicedSortedCards.add(new Card(nowPlayer.get(j).sort, nowPlayer.get(j).cardNumber));
                                         slicedCardsIndex.add(j);
                                         number[nowPlayer.get(j).cardNumber] = true;
+
+                                        if(cardCheckCount(slicedSortedCards)) {
+                                            for(int k = 0; k < slicedSortedCards.size(); k++) {
+                                                System.out.print(slicedSortedCards.get(k).cardText);
+                                            }
+                                            System.out.println();
+                                            cardNew(whoPlayer, slicedCardsIndex.get(0)+1);
+
+                                            for(int k = 1; k < slicedCardsIndex.size(); k++) {
+                                                cardInAI(whoPlayer, slicedCardsIndex.get(k)-k+1);
+                                            }
+                                        }
                                     }
                                 }
-
-                                for(int j = 0; j < slicedSortedCards.size(); j++) {
-                                    System.out.print(slicedSortedCards.get(j).cardText+" ");
-                                }
-                                System.out.println();
-
-                                for(int j = 0; j < slicedSortedCards.size()-2; j++) {
-                                    for(int k = j; k < j+3; k++) {
-                                        slicedCardsToCheckCount.add(new Card(slicedSortedCards.get(k).sort, slicedSortedCards.get(k).cardNumber));
-                                    }
-                                    if(!cardCheckCount(slicedCardsToCheckCount)) {
-                                        break;
-                                    }
-
-                                    for(int k = j+3; k < slicedSortedCards.size(); k++) {
-                                        slicedCardsToCheckCount.add(new Card(slicedSortedCards.get(k).sort, slicedSortedCards.get(k).cardNumber));
-                                        System.out.println("체크");
-                                        for(int x = 0; x < slicedCardsToCheckCount.size(); x++) {
-                                            System.out.print(slicedCardsToCheckCount.get(x).cardText+" ");
-                                        }
-                                        System.out.println();
-                                        if(!cardCheckCount(slicedCardsToCheckCount)) {
-                                            slicedCardsToCheckCount.remove(slicedCardsToCheckCount.size()-1);
-                                            slicedCardsIndex.remove(k);
-                                            break;
-                                        }
-                                    }
-
-                                    if(cardCheckCount(slicedCardsToCheckCount)) {
-                                        System.out.println("조건 만족");
-                                        for(int k = 0; k < slicedCardsIndex.size(); k++) {
-                                            System.out.print(slicedCardsIndex.get(k)+" ");
-                                        }
-                                        System.out.println();
-                                        for(int k = 0; k < slicedCardsToCheckCount.size(); k++) {
-                                            System.out.print(slicedCardsToCheckCount.get(k).cardText+" ");
-                                        }
-                                        System.out.println();
-//                                        cardNew(whoPlayer, slicedCardsIndex.get(0)+1);
-//
-//                                        for(int k = 1; k < slicedCardsIndex.size(); k++)
-//                                            cardInAI(whoPlayer, slicedCardsIndex.get(k)-k+1);
-                                    }
-
-
-                                    slicedCardsToCheckCount = new ArrayList<Card>();
-                                }
-
                                 slicedSortedCards.clear();
-                                slicedCardsIndex = new ArrayList<>();
+                                slicedCardsIndex.clear();
+                                number = new boolean[15];
                             }
 
-                            curBoard.CheckCards((whoPlayer==1)?playerCards:playerCards2,true);
 
                         }else if(input==2) {//기존패에 넣기
                             System.out.println();
@@ -584,7 +553,7 @@ public class Base {
 
     static void cardInAI(int whoPlayer, int select) {//카드 기존꺼에 넣기
         int toGroup = curBoard.boardCards.size()-1;
-        int toIndex = curBoard.boardCards.get(toGroup).size()-1;
+        int toIndex = curBoard.boardCards.get(toGroup).size();
 
         curBoard.addBoardCard2((whoPlayer==1)?playerCards.get(select-1):
                 playerCards2.get(select-1), toGroup, toIndex);
