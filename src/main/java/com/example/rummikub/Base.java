@@ -349,28 +349,20 @@ public class Base {
 
                             System.out.println();
                             for(int i = 0; i < curBoard.boardCards.size(); i++) {
-                                for(int j = 0; j < curBoard.boardCards.get(i).size(); j++) {
-                                    System.out.print(curBoard.boardCards.get(i).get(j).cardText);
-                                }
-                                System.out.println();
-                                if(cardCheckColor(curBoard.boardCards.get(i))) {
-                                    System.out.println("cardCheckColor");
-                                    if(curBoard.boardCards.get(i).size()==4)
-                                        continue;
-                                    for(int j = 0; j < nowPlayer.size(); j++) {
-                                        if(checkCardToColorInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))) {
-                                            cardInAIWithWay(whoPlayer, j+1, i, curBoard.boardCards.get(i).size(), 0);
-                                        }
-                                    }
-                                }
 
                                 if(cardCheckCount(curBoard.boardCards.get(i))) {
-                                    System.out.println("cardCheckCount");
-                                    if(curBoard.boardCards.get(i).size()==13)
+                                    if(curBoard.boardCards.get(i).size()>=13)
                                         continue;
+
                                     for(int j = 0; j < nowPlayer.size(); j++) {
-                                        System.out.println(checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i)));
-                                        if(checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))==1) {
+                                        //수정
+                                        if(nowPlayer.get(j).sort>3) {
+                                            if(curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size()-1).cardNumber==13)
+                                                cardInAIWithWay(whoPlayer, j+1, i, 1, 1);
+                                            else
+                                                cardInAIWithWay(whoPlayer, j+1, i, curBoard.boardCards.get(i).size(), 0);
+                                        }
+                                        else if(checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))==1) {
                                             cardInAIWithWay(whoPlayer, j+1, i, 1, 1);
                                         }
                                         else if(checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))==0) {
@@ -380,6 +372,20 @@ public class Base {
 
                                     }
                                 }
+
+                                if(cardCheckColor(curBoard.boardCards.get(i))) {
+                                    if(curBoard.boardCards.get(i).size()==4)
+                                        continue;
+                                    for(int j = 0; j < nowPlayer.size(); j++) {
+                                        if(nowPlayer.get(j).sort>3) {
+                                            cardInAIWithWay(whoPlayer, j+1, i, curBoard.boardCards.get(i).size(), 0);
+                                        }
+                                        else if(checkCardToColorInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))) {
+                                            cardInAIWithWay(whoPlayer, j+1, i, curBoard.boardCards.get(i).size(), 0);
+                                        }
+                                    }
+                                }
+
                             }
 
 
@@ -623,8 +629,6 @@ public class Base {
     }
 
     static int checkCardToNumberInBoardForAI(Card card, ArrayList<Card> board) {
-        System.out.println(card.cardText+" "+board.get(board.size()-1).cardText+" "+board.get(0).cardText);
-
         if(card.cardNumber-1==board.get(board.size()-1).cardNumber && card.sort==board.get(0).sort) return 0; // 뒤에
         else if(card.cardNumber+1==board.get(0).cardNumber && card.sort==board.get(0).sort) return 1; //앞에
         else return -1;
