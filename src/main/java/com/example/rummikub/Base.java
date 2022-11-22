@@ -258,6 +258,7 @@ public class Base {
                         ArrayList<Card> nowPlayer = (whoPlayer==1)?playerCards:playerCards2;
                         System.out.println((whoPlayer==1)?"플레이어 1 - 카드":"플레이어 2 - 카드");
                         curBoard.CheckCards((whoPlayer==1)?playerCards : playerCards2,false);
+                        System.out.println(nowPlayer.size());
                         System.out.println("1 - 새로놓기, 2 - 기존패에 넣기, 3 - 카드받기 , 4 - 특정 카드 되돌리기 , 5 - 특정 카드 옮기기 , 6 - 턴 종료");
 
                         Scanner sc=new Scanner(System.in);
@@ -292,7 +293,7 @@ public class Base {
                                     cardNew(whoPlayer, slicedCardsIndex.get(0)+1);
 
                                     for(int j = 1; j < slicedCardsIndex.size(); j++)
-                                        cardInAI(whoPlayer, slicedCardsIndex.get(j)-j+1, curBoard.boardCards.size());
+                                        cardInAI(whoPlayer, slicedCardsIndex.get(j)-j+1);
                                 }
 
                                 slicedSortedCards.clear();
@@ -332,7 +333,7 @@ public class Base {
                                             cardNew(whoPlayer, slicedCardsIndex.get(0)+1);
 
                                             for(int k = 1; k < slicedCardsIndex.size(); k++) {
-                                                cardInAI(whoPlayer, slicedCardsIndex.get(k)-k+1, curBoard.boardCards.size());
+                                                cardInAI(whoPlayer, slicedCardsIndex.get(k)-k+1);
                                             }
                                         }
                                     }
@@ -358,13 +359,27 @@ public class Base {
                                         continue;
                                     for(int j = 0; j < nowPlayer.size(); j++) {
                                         if(checkCardToColorInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))) {
-                                            cardInAI(whoPlayer, j+1, i+1);
+                                            cardInAIWithWay(whoPlayer, j+1, i, curBoard.boardCards.get(i).size(), 0);
                                         }
                                     }
                                 }
 
-                                if(cardCheckCount(curBoard.boardCards.get(i))) //수정
+                                if(cardCheckCount(curBoard.boardCards.get(i))) {
                                     System.out.println("cardCheckCount");
+                                    if(curBoard.boardCards.get(i).size()==13)
+                                        continue;
+                                    for(int j = 0; j < nowPlayer.size(); j++) {
+                                        System.out.println(checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i)));
+                                        if(checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))==1) {
+                                            cardInAIWithWay(whoPlayer, j+1, i, 1, 1);
+                                        }
+                                        else if(checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))==0) {
+                                            cardInAIWithWay(whoPlayer, j+1, i, curBoard.boardCards.get(i).size(), 0);
+                                        }
+                                        else continue;
+
+                                    }
+                                }
                             }
 
 
@@ -570,12 +585,25 @@ public class Base {
         }
     }
 
-    static void cardInAI(int whoPlayer, int select, int toGroup) {//카드 기존꺼에 넣기
-        toGroup-=1;
+    static void cardInAI(int whoPlayer, int select) {//카드 기존꺼에 넣기
+        int toGroup = curBoard.boardCards.size()-1;
         int toIndex = curBoard.boardCards.get(toGroup).size();
 
         curBoard.addBoardCard2((whoPlayer==1)?playerCards.get(select-1):
                 playerCards2.get(select-1), toGroup, toIndex);
+
+        if(whoPlayer==1) {
+            playerCards.get(select-1).byPlayer=true;
+            playerCards.remove(select-1);
+        }else {
+            playerCards2.get(select-1).byPlayer=true;
+            playerCards2.remove(select-1);
+        }
+    }
+
+    static void cardInAIWithWay(int whoPlayer, int select, int toGroup, int toIndex, int way) {
+        curBoard.addBoardCard2((whoPlayer==1)?playerCards.get(select-1):
+                playerCards2.get(select-1), toGroup, toIndex-way);
 
         if(whoPlayer==1) {
             playerCards.get(select-1).byPlayer=true;
@@ -594,6 +622,13 @@ public class Base {
         return true;
     }
 
+    static int checkCardToNumberInBoardForAI(Card card, ArrayList<Card> board) {
+        System.out.println(card.cardText+" "+board.get(board.size()-1).cardText+" "+board.get(0).cardText);
+
+        if(card.cardNumber-1==board.get(board.size()-1).cardNumber && card.sort==board.get(0).sort) return 0; // 뒤에
+        else if(card.cardNumber+1==board.get(0).cardNumber && card.sort==board.get(0).sort) return 1; //앞에
+        else return -1;
+    }
 
     static void cardReturn(int whoPlayer) {//특정카드 되돌리기
         Scanner sc=new Scanner(System.in);
