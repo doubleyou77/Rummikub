@@ -255,10 +255,10 @@ public class Base {
 
                         System.out.println("현재 보드");
                         curBoard.boardPrint();
-                        ArrayList<Card> nowPlayer = (whoPlayer == 1) ? playerCards : playerCards2;
+
                         System.out.println((whoPlayer == 1) ? "플레이어 1 - 카드" : "플레이어 2 - 카드");
                         curBoard.CheckCards((whoPlayer == 1) ? playerCards : playerCards2, false);
-                        System.out.println(nowPlayer.size());
+                        System.out.println(((whoPlayer == 1) ? playerCards : playerCards2).size());
                         System.out.println("1 - 새로놓기, 2 - 기존패에 넣기, 3 - 카드받기 , 4 - 특정 카드 되돌리기 , 5 - 특정 카드 옮기기 , 6 - 턴 종료");
 
                         Scanner sc = new Scanner(System.in);
@@ -267,12 +267,6 @@ public class Base {
                             if (playerCards.size() <= 0)
                                 continue;
                             System.out.println();
-                            if (whoPlayer == 1) {
-                                playerCards = curBoard.sortCardsToNumber(playerCards);
-                            } else {
-                                playerCards2 = curBoard.sortCardsToNumber(playerCards2);
-                            }
-                            nowPlayer = (whoPlayer == 1) ? playerCards : playerCards2;
 
 
                             ArrayList<Card> slicedSortedCards = new ArrayList<Card>();
@@ -281,11 +275,11 @@ public class Base {
                             boolean[] color = new boolean[5];
 
                             for (int i = 1; i <= 13; i++) {
-                                for (int j = 0; j < nowPlayer.size(); j++) {
-                                    if (nowPlayer.get(j).cardNumber == i && !color[nowPlayer.get(j).sort]) {
-                                        slicedSortedCards.add(new Card(nowPlayer.get(j).sort, nowPlayer.get(j).cardNumber));
+                                for (int j = 0; j < ((whoPlayer == 1) ? playerCards : playerCards2).size(); j++) {
+                                    if (((whoPlayer == 1) ? playerCards : playerCards2).get(j).cardNumber == i && !color[((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort]) {
+                                        slicedSortedCards.add(new Card(((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort, ((whoPlayer == 1) ? playerCards : playerCards2).get(j).cardNumber));
                                         slicedCardsIndex.add(j);
-                                        color[nowPlayer.get(j).sort] = true;
+                                        color[((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort] = true;
                                     }
                                 }
 
@@ -302,28 +296,22 @@ public class Base {
                             }
 
 
-                            if (whoPlayer == 1) {
-                                playerCards = curBoard.sortCardsToColor(playerCards);
-                            } else {
-                                playerCards2 = curBoard.sortCardsToColor(playerCards2);
-                            }
-                            nowPlayer = (whoPlayer == 1) ? playerCards : playerCards2;
 
                             boolean[] number = new boolean[15];
 
                             for (int i = 0; i <= 5; i++) {
-                                for (int j = 0; j < nowPlayer.size(); j++) {
-                                    if (nowPlayer.get(j).sort == i && !number[nowPlayer.get(j).cardNumber]) {
+                                for (int j = 0; j < ((whoPlayer == 1) ? playerCards : playerCards2).size(); j++) {
+                                    if (((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort == i && !number[((whoPlayer == 1) ? playerCards : playerCards2).get(j).cardNumber]) {
                                         if (slicedSortedCards.size() != 0) {
-                                            if (nowPlayer.get(j).cardNumber - 1 != slicedSortedCards.get(slicedSortedCards.size() - 1).cardNumber) {
+                                            if (((whoPlayer == 1) ? playerCards : playerCards2).get(j).cardNumber - 1 != slicedSortedCards.get(slicedSortedCards.size() - 1).cardNumber) {
                                                 slicedSortedCards.clear();
                                                 slicedCardsIndex.clear();
                                                 number = new boolean[15];
                                             }
                                         }
-                                        slicedSortedCards.add(new Card(nowPlayer.get(j).sort, nowPlayer.get(j).cardNumber));
+                                        slicedSortedCards.add(new Card(((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort, ((whoPlayer == 1) ? playerCards : playerCards2).get(j).cardNumber));
                                         slicedCardsIndex.add(j);
-                                        number[nowPlayer.get(j).cardNumber] = true;
+                                        number[((whoPlayer == 1) ? playerCards : playerCards2).get(j).cardNumber] = true;
 
                                         if (cardCheckCount(slicedSortedCards)) {
                                             for (int k = 0; k < slicedSortedCards.size(); k++) {
@@ -345,40 +333,35 @@ public class Base {
 
 
                         } else if (input == 2) {//기존패에 넣기
-                            nowPlayer = (whoPlayer == 1) ? playerCards : playerCards2;
 
-                            System.out.println();
                             for (int i = 0; i < curBoard.boardCards.size(); i++) {
 
                                 if (cardCheckCount(curBoard.boardCards.get(i))) {
-                                    if (curBoard.boardCards.get(i).size() >= 13)
-                                        continue;
+                                    if (curBoard.boardCards.get(i).size() < 13)
+                                        for (int j = 0; j < ((whoPlayer == 1) ? playerCards : playerCards2).size(); j++) {
 
-                                    for (int j = 0; j < nowPlayer.size(); j++) {
-
-                                        if (nowPlayer.get(j).sort > 3) {
-                                            if (curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size() - 1).cardNumber == 13)
+                                            if (((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort > 3) {
+                                                if (curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size() - 1).cardNumber == 13)
+                                                    cardInAIWithWay(whoPlayer, j + 1, i, 1, 1);
+                                                else
+                                                    cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
+                                            } else if (checkCardToNumberInBoardForAI(((whoPlayer == 1) ? playerCards : playerCards2).get(j), curBoard.boardCards.get(i)) == 1) {
                                                 cardInAIWithWay(whoPlayer, j + 1, i, 1, 1);
-                                            else
+                                            } else if (checkCardToNumberInBoardForAI(((whoPlayer == 1) ? playerCards : playerCards2).get(j), curBoard.boardCards.get(i)) == 0) {
                                                 cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
-                                        } else if (checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i)) == 1) {
-                                            cardInAIWithWay(whoPlayer, j + 1, i, 1, 1);
-                                        } else if (checkCardToNumberInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i)) == 0) {
-                                            cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
+                                            }
                                         }
-                                    }
                                 }
 
                                 if (cardCheckColor(curBoard.boardCards.get(i))) {
-                                    if (curBoard.boardCards.get(i).size() >= 4)
-                                        continue;
-                                    for (int j = 0; j < nowPlayer.size(); j++) {
-                                        if (nowPlayer.get(j).sort > 3) {
-                                            cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
-                                        } else if (checkCardToColorInBoardForAI(nowPlayer.get(j), curBoard.boardCards.get(i))) {
-                                            cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
+                                    if (curBoard.boardCards.get(i).size() < 4)
+                                        for (int j = 0; j < ((whoPlayer == 1) ? playerCards : playerCards2).size(); j++) {
+                                            if (((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort > 3) {
+                                                cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
+                                            } else if (checkCardToColorInBoardForAI(((whoPlayer == 1) ? playerCards : playerCards2).get(j), curBoard.boardCards.get(i))) {
+                                                cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
+                                            }
                                         }
-                                    }
                                 }
 
                             }
@@ -398,7 +381,6 @@ public class Base {
                             break;
                         } else if (input == 4) {//특정 카드 되돌리기
                             //수정
-                            // slicedCards.size() >= 3 카드에서 slicedCards삭제하고 값추가, slicedCards로 새 덱 추가
                             CardInAIByUsingBoard(whoPlayer);
 
                         } else if (input == 5) {//특정카드 옮기기
@@ -548,10 +530,10 @@ public class Base {
 
         if ((whoPlayer == 1) ? player1First : player2First) {
             for (int i = 0; i < curBoard.boardCards.get(selection - 1).size(); i++) {
-                if (curBoard.boardCards.get(selection - 1).get(i).byPlayer == false) {
-                    System.out.println("처음엔 다른 카드와 조합불가능");
-                    return;
-                }
+//                if (curBoard.boardCards.get(selection - 1).get(i).byPlayer == false) {
+//                    System.out.println("처음엔 다른 카드와 조합불가능");
+//                    return;
+//                }
             }
         }
 
@@ -616,15 +598,14 @@ public class Base {
 
     static void CardInAIByUsingBoard(int whoPlayer) {
         //수정2
-        ArrayList<Card> nowPlayer = (whoPlayer == 1) ? playerCards : playerCards2;
         ArrayList<Card> slicedCards = new ArrayList<>();
 
-        for (int i = 0; i < nowPlayer.size(); i++) {
+        for (int i = 0; i < ((whoPlayer == 1) ? playerCards : playerCards2).size(); i++) {
             for (int j = 0; j < curBoard.boardCards.size(); j++) {
                 for (int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
                     slicedCards.clear();
                     if (cardCheckCount(curBoard.boardCards.get(j)) && curBoard.boardCards.get(j).size() >= 5) {
-                        if (nowPlayer.get(i).cardNumber == curBoard.boardCards.get(j).get(k).cardNumber && nowPlayer.get(i).sort == curBoard.boardCards.get(j).get(k).sort) {
+                        if (((whoPlayer == 1) ? playerCards : playerCards2).get(i).cardNumber == curBoard.boardCards.get(j).get(k).cardNumber && ((whoPlayer == 1) ? playerCards : playerCards2).get(i).sort == curBoard.boardCards.get(j).get(k).sort) {
                             for (int q = k; q < curBoard.boardCards.get(j).size(); q++) {
                                 slicedCards.add(new Card(curBoard.boardCards.get(j).get(q).sort, curBoard.boardCards.get(j).get(q).cardNumber));
                             }
@@ -633,7 +614,7 @@ public class Base {
 
                     if(slicedCards.size() >= 3 && curBoard.boardCards.get(j).size()-slicedCards.size() >= 2) {
                         cardNew(whoPlayer, i+1);
-                        nowPlayer.remove(i);
+                        ((whoPlayer == 1) ? playerCards : playerCards2).remove(i);
 
                         for (int q = 1; q < slicedCards.size(); q++) {
                             curBoard.addBoardCard2(slicedCards.get(q), curBoard.boardCards.size()-1, q);
@@ -780,10 +761,10 @@ public class Base {
 
         if((whoPlayer==1)?player1First:player2First) {
             for(int i=0;i<curBoard.boardCards.get(selection3-1).size();i++) {
-                if(curBoard.boardCards.get(selection3-1).get(i).byPlayer==false) {
-                    System.out.println("처음엔 다른 카드와 조합불가능");
-                    return;
-                }
+//                if(curBoard.boardCards.get(selection3-1).get(i).byPlayer==false) {
+//                    System.out.println("처음엔 다른 카드와 조합불가능");
+//                    return;
+//                }
             }
         }
 
