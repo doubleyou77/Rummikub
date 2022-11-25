@@ -269,6 +269,14 @@ public class Base {
                                 continue;
                             System.out.println();
 
+                            //수정
+                            if((whoPlayer == 1))
+                                playerCards = curBoard.sortCardsToNumber(playerCards);
+                            else
+                                playerCards2 = curBoard.sortCardsToNumber(playerCards2);
+
+                            curBoard.CheckCards((whoPlayer == 1) ? playerCards : playerCards2, false);
+
                             ArrayList<Card> slicedSortedCards = new ArrayList<Card>();
                             ArrayList<Integer> slicedCardsIndex = new ArrayList<>();
 
@@ -289,10 +297,6 @@ public class Base {
                                         number[((whoPlayer == 1) ? playerCards : playerCards2).get(j).cardNumber] = true;
 
                                         if (cardCheckCount(slicedSortedCards)) {
-                                            for (int k = 0; k < slicedSortedCards.size(); k++) {
-                                                System.out.print(slicedSortedCards.get(k).cardText);
-                                            }
-                                            System.out.println();
                                             cardNew(whoPlayer, slicedCardsIndex.get(0) + 1);
 
                                             for (int k = 1; k < slicedCardsIndex.size(); k++) {
@@ -305,6 +309,12 @@ public class Base {
                                 slicedCardsIndex.clear();
                                 number = new boolean[15];
                             }
+
+
+//                            if((whoPlayer == 1))
+//                                playerCards = curBoard.sortCardsToColor(playerCards);
+//                            else
+//                                playerCards2 = curBoard.sortCardsToColor(playerCards2);
 
                             boolean[] color = new boolean[5];
 
@@ -655,7 +665,7 @@ public class Base {
     }
 
     static void CardInAIByUsingBoard(int whoPlayer) {
-        //수정2
+
         ArrayList<Card> slicedCards = new ArrayList<>();
 
         for (int i = 0; i < ((whoPlayer == 1) ? playerCards : playerCards2).size(); i++) {
