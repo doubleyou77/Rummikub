@@ -342,12 +342,7 @@ public class Base {
                                     if (curBoard.boardCards.get(i).size() < 13)
                                         for (int j = 0; j < ((whoPlayer == 1) ? playerCards : playerCards2).size(); j++) {
 
-                                            if (((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort > 3) {
-                                                if (curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size() - 1).cardNumber == 13)
-                                                    cardInAIWithWay(whoPlayer, j + 1, i, 1, 1);
-                                                else
-                                                    cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
-                                            } else if (checkCardToNumberInBoardForAI(((whoPlayer == 1) ? playerCards : playerCards2).get(j), curBoard.boardCards.get(i)) == 1) {
+                                            if (checkCardToNumberInBoardForAI(((whoPlayer == 1) ? playerCards : playerCards2).get(j), curBoard.boardCards.get(i)) == 1) {
                                                 cardInAIWithWay(whoPlayer, j + 1, i, 1, 1);
                                             } else if (checkCardToNumberInBoardForAI(((whoPlayer == 1) ? playerCards : playerCards2).get(j), curBoard.boardCards.get(i)) == 0) {
                                                 cardInAIWithWay(whoPlayer, j + 1, i, curBoard.boardCards.get(i).size(), 0);
