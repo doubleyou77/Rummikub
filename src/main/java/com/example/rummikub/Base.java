@@ -432,30 +432,6 @@ public class Base {
 
                         } else if (input == 5) {//특정카드 옮기기 또는 추가 //수정
 
-                            for(int i = 0; i < ((whoPlayer == 1) ? playerCards : playerCards2).size(); i++) {
-                                for(int j = 0; j < curBoard.boardCards.size(); j++) {
-                                    if(cardCheckCount(curBoard.boardCards.get(j))) {
-                                        if (((whoPlayer == 1) ? playerCards : playerCards2).get(i).sort == curBoard.boardCards.get(j).get(0).sort && curBoard.boardCards.get(j).size() >= 6) {
-                                            for (int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
-                                                if(((whoPlayer == 1) ? playerCards : playerCards2).get(i).cardNumber == curBoard.boardCards.get(j).get(k).cardNumber) {
-                                                    if (k >= 3 && 3 < curBoard.boardCards.get(j).size() - k) {
-                                                        System.out.println(((whoPlayer == 1) ? playerCards : playerCards2).get(i).cardText+" "+ curBoard.boardCards.get(j).get(k).cardText);
-                                                        curBoard.boardCards.add(new ArrayList<Card>());
-                                                        for(int q = k; q < curBoard.boardCards.get(j).size(); q++) {
-                                                            curBoard.addBoardCard(curBoard.boardCards.get(j).get(q), curBoard.boardCards.size()-1);
-                                                        }
-                                                        for(int q = curBoard.boardCards.get(j).size()-1; q > k-1; q--) {
-                                                            curBoard.boardCards.get(j).remove(q);
-                                                        }
-                                                        cardInAIWithWay(whoPlayer, i+1,  j, k, 0);
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
 
 
                             ArrayList<Card> slicedTotalCards = new ArrayList<Card>();
@@ -549,6 +525,31 @@ public class Base {
                                 slicedBoardIndex.clear();
 
                                 color = new boolean[5];
+                            }
+
+                            for(int i = 0; i < ((whoPlayer == 1) ? playerCards : playerCards2).size(); i++) {
+                                for(int j = 0; j < curBoard.boardCards.size(); j++) {
+                                    if(cardCheckCount(curBoard.boardCards.get(j))) {
+                                        if (((whoPlayer == 1) ? playerCards : playerCards2).get(i).sort == curBoard.boardCards.get(j).get(0).sort && curBoard.boardCards.get(j).size() >= 6) {
+                                            for (int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
+                                                if(((whoPlayer == 1) ? playerCards : playerCards2).get(i).cardNumber == curBoard.boardCards.get(j).get(k).cardNumber) {
+                                                    if (k >= 3 && 3 < curBoard.boardCards.get(j).size() - k) {
+                                                        System.out.println(((whoPlayer == 1) ? playerCards : playerCards2).get(i).cardText+" "+ curBoard.boardCards.get(j).get(k).cardText);
+                                                        curBoard.boardCards.add(new ArrayList<Card>());
+                                                        for(int q = k; q < curBoard.boardCards.get(j).size(); q++) {
+                                                            curBoard.addBoardCard(curBoard.boardCards.get(j).get(q), curBoard.boardCards.size()-1);
+                                                        }
+                                                        for(int q = curBoard.boardCards.get(j).size()-1; q > k-1; q--) {
+                                                            curBoard.boardCards.get(j).remove(q);
+                                                        }
+                                                        cardInAIWithWay(whoPlayer, i+1,  j, k, 0);
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
                         } else if (input == 6) {
@@ -782,6 +783,8 @@ public class Base {
 
 //                        } else if (input == 5) {//특정카드 옮기기 //수정
 
+
+
                             ArrayList<Card> slicedTotalCards = new ArrayList<Card>();
                             ArrayList<Card> slicedPlayerCards = new ArrayList<Card>();
                             ArrayList<Card> slicedBoardCards = new ArrayList<Card>();
@@ -816,7 +819,6 @@ public class Base {
                                                         break;
                                                     }
                                                 } else if (k > 3 && 3 < curBoard.boardCards.get(j).size() - k - 1){
-                                                    System.out.println(curBoard.boardCards.get(j).get(k).cardText);
                                                     slicedTotalCards.add(new Card(curBoard.boardCards.get(j).get(k).sort, curBoard.boardCards.get(j).get(k).cardNumber));
                                                     slicedBoardCards.add(new Card(curBoard.boardCards.get(j).get(k).sort, curBoard.boardCards.get(j).get(k).cardNumber));
                                                     color[curBoard.boardCards.get(j).get(k).sort] = true;
@@ -877,6 +879,30 @@ public class Base {
                                 color = new boolean[5];
                             }
 
+                        for(int i = 0; i < ((whoPlayer == 1) ? playerCards : playerCards2).size(); i++) {
+                            for(int j = 0; j < curBoard.boardCards.size(); j++) {
+                                if(cardCheckCount(curBoard.boardCards.get(j))) {
+                                    if (((whoPlayer == 1) ? playerCards : playerCards2).get(i).sort == curBoard.boardCards.get(j).get(0).sort && curBoard.boardCards.get(j).size() >= 6) {
+                                        for (int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
+                                            if(((whoPlayer == 1) ? playerCards : playerCards2).get(i).cardNumber == curBoard.boardCards.get(j).get(k).cardNumber) {
+                                                if (k >= 3 && 3 < curBoard.boardCards.get(j).size() - k) {
+                                                    curBoard.boardCards.add(new ArrayList<Card>());
+                                                    for(int q = k; q < curBoard.boardCards.get(j).size(); q++) {
+                                                        curBoard.addBoardCard(curBoard.boardCards.get(j).get(q), curBoard.boardCards.size()-1);
+                                                    }
+                                                    for(int q = curBoard.boardCards.get(j).size()-1; q > k-1; q--) {
+                                                        curBoard.boardCards.get(j).remove(q);
+                                                    }
+                                                    cardInAIWithWay(whoPlayer, i+1,  j, k, 0);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
 //                        } else if (input == 6) {
                             boolean result = cardCheck((whoPlayer == 1) ? player1First : player2First);
 
@@ -911,6 +937,9 @@ public class Base {
                                     player2First = true;
                                 }
 
+                                System.out.println("현재 보드");
+                                curBoard.boardPrint();
+
                                 break;
                             } else {
                                 int nowColor = -1;
@@ -921,16 +950,12 @@ public class Base {
                                         for(int j = i+1; j < curBoard.boardCards.size(); j++) {
                                             if(cardCheckCount(curBoard.boardCards.get(j)) && curBoard.boardCards.get(j).get(0).sort == nowColor) {
                                                 if(curBoard.boardCards.get(i).get(0).cardNumber-1 == curBoard.boardCards.get(j).get(curBoard.boardCards.get(j).size()-1).cardNumber) {
-                                                    System.out.println(i+" "+j);
-                                                    System.out.println("left");
                                                     for(int k = 0; k < curBoard.boardCards.get(i).size(); k++) {
                                                         curBoard.addBoardCard(curBoard.boardCards.get(i).get(k), j);
                                                     }
                                                     curBoard.boardCards.remove(i);
                                                 }
                                                 else if (curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size()-1).cardNumber+1 == curBoard.boardCards.get(j).get(0).cardNumber) {
-                                                    System.out.println(i+" "+j);
-                                                    System.out.println("right");
                                                     for(int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
                                                         curBoard.addBoardCard(curBoard.boardCards.get(j).get(k), i);
                                                     }
@@ -950,13 +975,9 @@ public class Base {
                                                 for(int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
                                                     if(curBoard.boardCards.get(j).get(k).sort == nowColor) {
                                                         if (curBoard.boardCards.get(i).get(0).cardNumber - 1 == curBoard.boardCards.get(j).get(k).cardNumber) {
-                                                            System.out.println(i+" "+j);
-                                                            System.out.println("left");
                                                             curBoard.addBoardCard2(curBoard.boardCards.get(j).get(k), i, 0);
                                                             curBoard.boardCards.get(j).remove(k);
                                                         } else if (curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size() - 1).cardNumber + 1 == curBoard.boardCards.get(j).get(k).cardNumber) {
-                                                            System.out.println(i+" "+j);
-                                                            System.out.println("right");
                                                             curBoard.addBoardCard(curBoard.boardCards.get(j).get(k), i);
                                                             curBoard.boardCards.get(j).remove(k);
                                                         }
