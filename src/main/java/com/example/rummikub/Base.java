@@ -13,7 +13,7 @@ public class Base {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         System.out.println("루미큐브");
-        System.out.println("1 - 2인 플레이 , 2 - AI 2인 플레이 , 아무 숫자 - 종료");
+        System.out.println("1 - 2인 플레이 , 2 - AI 2인 플레이(반자동) , 2 - AI 2인 플레이(자동) , 아무 숫자 - 종료");
         {//입력
             while (true) {
                 Scanner sc = new Scanner(System.in);
