@@ -57,12 +57,12 @@ public class Base {
         {//플레이어1 카드세팅 45 -> 14 수정하기
             playerCards.clear();
             playerCards2.clear();
-            for (int i = 0; i < 45; i++) {
+            for (int i = 0; i < 14; i++) {
                 int drawIndex = (int) (Math.random() * Cards.size());
                 playerCards.add(Cards.get(drawIndex));
                 Cards.remove(drawIndex);
             }
-            for (int i = 0; i < 45; i++) {
+            for (int i = 0; i < 14; i++) {
                 int drawIndex = (int) (Math.random() * Cards.size());
                 playerCards2.add(Cards.get(drawIndex));
                 Cards.remove(drawIndex);
@@ -408,6 +408,32 @@ public class Base {
                                 }
                             }
 
+                            for(int i = 0; i < curBoard.boardCards.size(); i++) {
+                                if(cardCheckCount(curBoard.boardCards.get(i))) {
+                                    color = curBoard.boardCards.get(i).get(0).sort;
+
+                                    for(int j = 0; j < curBoard.boardCards.size(); j++) {
+                                        if(cardCheckColor(curBoard.boardCards.get(j)) && curBoard.boardCards.get(j).size() > 3) {
+                                            for(int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
+                                                if(curBoard.boardCards.get(j).get(k).sort == color) {
+                                                    if (curBoard.boardCards.get(i).get(0).cardNumber - 1 == curBoard.boardCards.get(j).get(k).cardNumber) {
+                                                        System.out.println(i+" "+j);
+                                                        System.out.println("left");
+                                                        curBoard.addBoardCard2(curBoard.boardCards.get(j).get(k), i, 0);
+                                                        curBoard.boardCards.get(j).remove(k);
+                                                    } else if (curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size() - 1).cardNumber + 1 == curBoard.boardCards.get(j).get(k).cardNumber) {
+                                                        System.out.println(i+" "+j);
+                                                        System.out.println("right");
+                                                        curBoard.addBoardCard(curBoard.boardCards.get(j).get(k), i);
+                                                        curBoard.boardCards.get(j).remove(k);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
 
                         } else if (input == 5) {//특정카드 옮기기 //수정
 
@@ -430,7 +456,6 @@ public class Base {
                                         color[((whoPlayer == 1) ? playerCards : playerCards2).get(j).sort] = true;
                                     }
                                 }
-
 
                                 for (int j = 0; j < boardSize; j++) {
                                     if (cardCheckCount(curBoard.boardCards.get(j)) && !color[curBoard.boardCards.get(j).get(0).sort]) {
@@ -876,16 +901,46 @@ public class Base {
                                         for(int j = i+1; j < curBoard.boardCards.size(); j++) {
                                             if(cardCheckCount(curBoard.boardCards.get(j)) && curBoard.boardCards.get(j).get(0).sort == nowColor) {
                                                 if(curBoard.boardCards.get(i).get(0).cardNumber-1 == curBoard.boardCards.get(j).get(curBoard.boardCards.get(j).size()-1).cardNumber) {
+                                                    System.out.println(i+" "+j);
+                                                    System.out.println("left");
                                                     for(int k = 0; k < curBoard.boardCards.get(i).size(); k++) {
                                                         curBoard.addBoardCard(curBoard.boardCards.get(i).get(k), j);
                                                     }
                                                     curBoard.boardCards.remove(i);
                                                 }
                                                 else if (curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size()-1).cardNumber+1 == curBoard.boardCards.get(j).get(0).cardNumber) {
+                                                    System.out.println(i+" "+j);
+                                                    System.out.println("right");
                                                     for(int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
                                                         curBoard.addBoardCard(curBoard.boardCards.get(j).get(k), i);
                                                     }
                                                     curBoard.boardCards.remove(j);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                for(int i = 0; i < curBoard.boardCards.size(); i++) {
+                                    if(cardCheckCount(curBoard.boardCards.get(i))) {
+                                        nowColor = curBoard.boardCards.get(i).get(0).sort;
+
+                                        for(int j = 0; j < curBoard.boardCards.size(); j++) {
+                                            if(cardCheckColor(curBoard.boardCards.get(j)) && curBoard.boardCards.get(j).size() > 3) {
+                                                for(int k = 0; k < curBoard.boardCards.get(j).size(); k++) {
+                                                    if(curBoard.boardCards.get(j).get(k).sort == nowColor) {
+                                                        if (curBoard.boardCards.get(i).get(0).cardNumber - 1 == curBoard.boardCards.get(j).get(k).cardNumber) {
+                                                            System.out.println(i+" "+j);
+                                                            System.out.println("left");
+                                                            curBoard.addBoardCard2(curBoard.boardCards.get(j).get(k), i, 0);
+                                                            curBoard.boardCards.get(j).remove(k);
+                                                        } else if (curBoard.boardCards.get(i).get(curBoard.boardCards.get(i).size() - 1).cardNumber + 1 == curBoard.boardCards.get(j).get(k).cardNumber) {
+                                                            System.out.println(i+" "+j);
+                                                            System.out.println("right");
+                                                            curBoard.addBoardCard(curBoard.boardCards.get(j).get(k), i);
+                                                            curBoard.boardCards.get(j).remove(k);
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -928,7 +983,7 @@ public class Base {
 
                 try {
 
-                    Thread.sleep(1000);
+                    Thread.sleep(200);
 
                 } catch (InterruptedException e) {
 
@@ -1089,7 +1144,8 @@ public class Base {
 
     static boolean checkCardToColorInBoardForAI(Card card, ArrayList<Card> board) {
         for(int i = 0; i < board.size(); i++) {
-            if(card.cardNumber == board.get(i).cardNumber && card.sort != board.get(i).sort) {}
+            if(board.get(i).sort > 3 ) {}
+            else if(card.cardNumber == board.get(i).cardNumber && card.sort != board.get(i).sort) {}
             else return false;
         }
         return true;
