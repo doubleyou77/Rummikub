@@ -54,7 +54,7 @@ public class Base {
         }
 
 
-        {//플레이어1 카드세팅 45 -> 14 수정하기
+        {//플레이어1 카드세팅
             playerCards.clear();
             playerCards2.clear();
             for (int i = 0; i < 14; i++) {
@@ -215,7 +215,7 @@ public class Base {
         }
     }
 
-    static void gameStart2() {//AI2인플 . 이건 형진씨가 할거라 믿습니다^^7
+    static void gameStart2() {//AI 반자동
 
         gameInit();//게임 초기화
 
@@ -377,7 +377,7 @@ public class Base {
                             cardAdd((whoPlayer == 1) ? playerCards : playerCards2);
                             break;
 
-                        } else if (input == 4) {//기존 패 카드 붙이기
+                        } else if (input == 4) {//패 붙이기
                             //수정
                             int color = -1;
                             for(int i = 0; i < curBoard.boardCards.size(); i++) {
@@ -427,7 +427,7 @@ public class Base {
 
 
 
-                        } else if (input == 5) {//특정카드 옮기기 또는 추가 //수정
+                        } else if (input == 5) {//합쳐서 패 만들기
 
                             int count = 0;
 
@@ -437,7 +437,6 @@ public class Base {
 
 
                             ArrayList<Integer> slicedPlayerIndex = new ArrayList<>();
-//                            ArrayList<Integer> slicedBoardIndex = new ArrayList<>();
 
                             boolean[] color = new boolean[5];
                             int boardSize = curBoard.boardCards.size();
@@ -505,7 +504,6 @@ public class Base {
                                                     slicedTotalCards.add(new Card(curBoard.boardCards.get(j).get(k).sort, curBoard.boardCards.get(j).get(k).cardNumber));
                                                     slicedBoardCards.add(new Card(curBoard.boardCards.get(j).get(k).sort, curBoard.boardCards.get(j).get(k).cardNumber));
                                                     color[curBoard.boardCards.get(j).get(k).sort] = true;
-//                                                        slicedBoardIndex.add(j);
                                                     curBoard.boardCards.get(j).remove(k);
                                                     break;
                                                 } else if (curBoard.boardCards.get(j).get(k).sort > 3) {
@@ -571,7 +569,6 @@ public class Base {
                                 slicedBoardCards.clear();
 
                                 slicedPlayerIndex.clear();
-//                                slicedBoardIndex.clear();
 
                                 color = new boolean[5];
                                 count = 0;
@@ -659,21 +656,11 @@ public class Base {
                     System.out.println("gameEnd");
                     break;
                 }
-
-//                try {
-//
-//                    Thread.sleep(1000);
-//
-//                } catch (InterruptedException e) {
-//
-//                    System.out.println("error");
-//
-//                }
             }
         }
     }
 
-    static void gameStart3() {//AI2인플 . 이건 형진씨가 할거라 믿습니다^^7
+    static void gameStart3() {//AI2인플 자동
 
         gameInit();//게임 초기화
 
@@ -714,10 +701,7 @@ public class Base {
                         System.out.println((whoPlayer == 1) ? "플레이어 1 - 카드" : "플레이어 2 - 카드");
                         curBoard.CheckCards((whoPlayer == 1) ? playerCards : playerCards2, false);
                         System.out.println(((whoPlayer == 1) ? playerCards : playerCards2).size());
-//                        System.out.println("1 - 새로놓기, 2 - 기존패에 넣기, 3 - 카드받기 , 4 - 특정 카드 되돌리기 , 5 - 특정 카드 옮기기 , 6 - 턴 종료");
 
-//                        Scanner sc = new Scanner(System.in);
-//                        int input = sc.nextInt();
 //                        if (input == 1) {//새로 놓기
                             if (playerCards.size() <= 0)
                                 continue;
@@ -822,14 +806,7 @@ public class Base {
                             }
 
 
-//                        } else if (input == 3) {//카드 받기
-
-
-//                        } else if (input == 4) {//특정 카드 되돌리기
-                            //수정
-
-
-//                        } else if (input == 5) {//특정카드 옮기기 //수정
+//                        } else if (input == 5) {//합쳐서 패만들기
                         int count = 0;
 
                         ArrayList<Card> slicedTotalCards = new ArrayList<Card>();
@@ -838,7 +815,6 @@ public class Base {
 
 
                         ArrayList<Integer> slicedPlayerIndex = new ArrayList<>();
-//                            ArrayList<Integer> slicedBoardIndex = new ArrayList<>();
 
                         color = new boolean[5];
                         int boardSize = curBoard.boardCards.size();
@@ -906,7 +882,6 @@ public class Base {
                                                     slicedTotalCards.add(new Card(curBoard.boardCards.get(j).get(k).sort, curBoard.boardCards.get(j).get(k).cardNumber));
                                                     slicedBoardCards.add(new Card(curBoard.boardCards.get(j).get(k).sort, curBoard.boardCards.get(j).get(k).cardNumber));
                                                     color[curBoard.boardCards.get(j).get(k).sort] = true;
-//                                                        slicedBoardIndex.add(j);
                                                     curBoard.boardCards.get(j).remove(k);
                                                     break;
                                                 } else if (curBoard.boardCards.get(j).get(k).sort > 3) {
@@ -972,7 +947,6 @@ public class Base {
                             slicedBoardCards.clear();
 
                             slicedPlayerIndex.clear();
-//                                slicedBoardIndex.clear();
 
                             color = new boolean[5];
                             count = 0;
@@ -1002,7 +976,7 @@ public class Base {
                             }
                         }
 
-//                        } else if (input == 6) {
+//                        } else if (input == 6) { // 턴 체크
                             boolean result = cardCheck((whoPlayer == 1) ? player1First : player2First);
 
                             {//First끝난후 한개라도 배치하긴 했는지.
@@ -1023,15 +997,15 @@ public class Base {
 
 
                             if (result) {//결과3
+                                System.out.println("현재 보드");
+                                curBoard.boardPrint();
                                 if (whoPlayer == 1) {
-                                    System.out.println(playerCards.size());
                                     if (playerCards.size() == 0) {
                                         System.out.println("Player 1 승리");
                                         gameEnd = true;
                                     }
                                     player1First = true;
                                 } else {
-                                    System.out.println(playerCards2.size());
                                     if (playerCards2.size() == 0) {
                                         System.out.println("Player 2 승리");
                                         gameEnd = true;
@@ -1039,11 +1013,9 @@ public class Base {
                                     player2First = true;
                                 }
 
-                                System.out.println("현재 보드");
-                                curBoard.boardPrint();
 
                                 break;
-                            } else {
+                            } else { // 패끼리 합치기
                                 int nowColor = -1;
                                 for(int i = 0; i < curBoard.boardCards.size(); i++) {
                                     if(cardCheckCount(curBoard.boardCards.get(i))) {
@@ -1091,6 +1063,7 @@ public class Base {
                                 }
                             }
 
+                            // 카드 받기
                             {//초기화
                                 playerCards.clear();
                                 for (int i = 0; i < playerCardsTemp.size(); i++) {
@@ -1113,9 +1086,9 @@ public class Base {
                     } else {
                         whoPlayer = 1;
                     }
-//                    System.out.println();
-//                    System.out.println();
-//                    System.out.println();
+                    System.out.println();
+                    System.out.println();
+                    System.out.println();
 
                 }
 
@@ -1126,7 +1099,7 @@ public class Base {
 
                 try {
 
-                    Thread.sleep(200);
+                    Thread.sleep(100);
 
                 } catch (InterruptedException e) {
 
